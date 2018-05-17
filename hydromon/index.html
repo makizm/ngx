@@ -1,0 +1,420 @@
+<!doctype html>  
+<html lang="en">  
+    <head>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="/jquery/dist/jquery.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+
+        <!-- bootstrap -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css"></link>
+
+        <!-- bootstrap-slider -->
+        <link rel="stylesheet" href="/bootstrap-slider/dist/css/bootstrap-slider.min.css"></link>
+
+        <!-- font awesome -->
+        <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css"></link>
+
+        <!-- Formatting for Google gauge -->
+        <script type="text/javascript" src="gauge-style.js"></script>
+
+        <!-- Sample data -->
+        <script type="text/javascript" src="data2.json"></script>
+
+        <script type="text/javascript">
+        
+            var srv = location.origin;
+
+            var socket = io.connect(srv);
+
+            var testD = [
+                ['Date', 'a1', 'a2', 'a3', 'a4'],
+                ["2018-05-09T16:13:41.200Z",0,0,0,0]
+            ];
+
+            var barData = [
+                ['Day', 'Hours', { role: 'style' }],
+                ['Mon', 0, barStyle],
+                ['Tue', 5, barStyle],
+                ['Wed', 4, barStyle],
+                ['Thu', 6, barStyle],
+                ['Fri', 3, barStyle],
+                ['Sat', 0, barStyle],
+                ['Sun', 2, barStyle]
+            ]
+
+            // chart timestamp ticks
+            var ticks = new Array();
+
+            // used to store next tick increment value
+            var nextTick = new Date(Date.now());
+            // testing
+            nextTick.setHours(nextTick.getHours() - 6);
+
+            // add first tick entry as now
+            // ticks.push(new Date(Date.now()));
+
+            var chartData = JSON.parse(JSON.stringify(data));
+
+            // testing: convert date string to Date object
+            chartData.forEach((v, i, a) => {
+                if(i != 0) {
+                    a[i][0] = new Date(v[0]);
+                }
+
+                if(a[i][0] >= nextTick) {
+                    // increment ticks every n hours
+                    nextTick.setHours(nextTick.getHours() + 6);
+                    // store a tick
+                    ticks.push(a[i][0]);
+                }
+            })
+
+            // console.log(data[1]);
+
+            socket.on('connect', function(data) {
+                socket.emit('join', 'Hello World from client');
+            });
+
+            google.charts.load('current', {'packages':['gauge','corechart']});
+
+            function drawCharts(data) {
+                var a1 = Math.round(data.a1) || 0;
+                var a2 = Math.round(data.a2) || 0;
+                var a3 = Math.round(data.a3) || 0;
+                var a4 = Math.round(data.a4) || 0;
+
+                var timestamp = new Date(Date.now());
+                
+                var data_a1 = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['%', a1]
+                ]);
+
+                var data_a2 = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['%', a2]
+                ]);
+
+                var data_a3 = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['%', a3]
+                ]);
+
+                var data_a4 = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['%', a4]
+                ]);
+
+                // chartData.push([timestamp, a1, a2, a3, a4]);
+
+                // var hMaxValue = new Date(Date.now());
+                // hMaxValue.setHours(hMaxValue.getHours() + 6);
+                // hMaxValue.setHours(hMinValue.getHours() + 6);
+
+                var barChartData = google.visualization.arrayToDataTable(barData);
+
+                var barChartView = new google.visualization.DataView(barChartData);
+                    barChartView.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]);
+
+                var barOptions = {
+                    titlePosition: 'none',
+                    backgroundColor: '#242424',
+                    legend: { position: "none" },
+                    chartArea: { width: '87%' },
+                    vAxis: {
+                        minValue: 0,
+                        // maxValue: 24,
+                        titleTextStyle: { color: '7e7e7e' },
+                        textStyle: { color: '7e7e7e'},
+                        gridlines: { color: '#333' }
+                    },
+                    hAxis: {
+                        textStyle: { color: '7e7e7e'}
+                    },
+                    annotations: {
+                        textStyle: {
+                            fontSize: 40,
+                            bold: true,
+                            opacity: 0.1
+                        }
+                    }
+                }
+
+                var barChart = new google.visualization.ColumnChart(document.getElementById('run_chart'));
+                    barChart.draw(barChartView, barOptions);
+
+
+                var chart_data = google.visualization.arrayToDataTable(chartData);
+
+                var chartOptions = {
+                    titlePosition: 'none',
+                    axisTitlesPosition: 'none',
+                    // aggregationTarget: 'none',
+                    // enableInteractivity: 'false',
+                    backgroundColor: '#242424',
+                    chartArea: {
+                        // backgroundColor: '',
+                        width: '87%',
+                        height: '90%',
+                        // left: 0,
+                        // top: 0
+                    },
+                    hAxis: { // textPosition: 'none',
+                        format: 'hh:mm a',
+                        gridlines: { count: 6 },
+                        ticks: ticks,
+                        gridlines: { count: 0 }
+                    },
+                    vAxis: { 
+                        title: '%',
+                        titleTextStyle: { color: '7e7e7e' },
+                        textStyle: { color: '7e7e7e'},
+                        minValue: 0,
+                        maxValue: 100,
+                        gridlines: { color: '#333' }
+                    },
+                    legend: { position: 'none' },
+                    // pointsVisible: 'false'
+                };
+
+                var chart = new google.visualization.AreaChart(document.getElementById('12h_chart'));
+                chart.draw(chart_data, chartOptions);
+
+                var gaugeOptions = {
+                    width: 150, height: 150,
+                    min: 0,
+                    max: 100,
+                    yellowFrom: 0, yellowTo: 60,
+                    greenFrom: 60, greenTo: 100,
+                    minorTicks: 5,
+                    greenColor: '#40e0d0',
+                    yellowColor: '#FA8072'
+                };
+
+                var gauge_a1 = new google.visualization.Gauge(document.querySelector('#gauge-a1'));
+                var gauge_a2 = new google.visualization.Gauge(document.getElementById('gauge-a2'));
+                var gauge_a3 = new google.visualization.Gauge(document.getElementById('gauge-a3'));
+                var gauge_a4 = new google.visualization.Gauge(document.getElementById('gauge-a4'));
+
+                google.visualization.events.addListener(gauge_a1, 'ready', gaugeStyle);
+                google.visualization.events.addListener(gauge_a2, 'ready', gaugeStyle);
+                google.visualization.events.addListener(gauge_a3, 'ready', gaugeStyle);
+                google.visualization.events.addListener(gauge_a4, 'ready', gaugeStyle);
+
+                gauge_a1.draw(data_a1, gaugeOptions);
+                gauge_a2.draw(data_a2, gaugeOptions);
+                gauge_a3.draw(data_a3, gaugeOptions);
+                gauge_a4.draw(data_a4, gaugeOptions);
+
+                // document.getElementById('footer').innerHTML = "Latest reading on: " + chart_data.Timestamp;
+            }
+        </script>
+
+        <style>
+            body {
+                background-color: #242424;
+            }
+            /* #12h_chart {
+                width: 100%;
+            } */
+            .row.navi {
+                height: 50px;
+            }
+            .navbar {
+                height: 45px;
+            }
+            nav.navbar button.navbar-toggler {
+                height: 35px;
+                width: 51px;
+                font-size: 1rem;
+            }
+            .row.navi > div.pos-f-t {
+                width: 100%;
+                height: 40px;
+                padding: 0 15px 0 15px; 
+                /* make menu overlay on top of content */
+                z-index:1;
+                position: relative;
+            }
+            /* @media screen and (max-width: 600px) {} */
+            .row.navi > div.pos-f-t div.row.control-text {
+                display: inline-grid;
+                margin-bottom: 10px;
+            }
+            .row.row-one > div > div.chart-title {
+                color: #7e7e7e;
+                margin-left: 10px;
+            }
+            .row.row-one > div > div.google-chart {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+            .sensors {
+                display: flex;
+            }
+            .sensor {
+                width: 50px;
+            }
+            .gauge {
+                width: 150px;
+            }
+            .gauge-label {
+                text-align: center;
+                color: #7e7e7e;
+            }
+            .gauge > div.google_chart > table {
+                margin: auto !important;
+            }
+            .slider.slider-vertical {
+                width: inherit;
+            }
+            .slider.slider.slider-vertical .slider-track .slider-selection{
+                background-image: linear-gradient(to bottom,#00fde8 0,#00fde8 100%);
+            }
+            .slider.slider-vertical .slider-track {
+                width: 50px;
+            }
+            .slider.slider-vertical .slider-handle {
+                width: 50px;
+                height: 0px; 
+                background-image: none;
+                background-color: transparent;
+            }
+            .slider.slider.slider-vertical .tooltip.tooltip-main.right.in {
+                top: -10% !important;
+            }
+        </style>
+
+    </head>
+    <body>
+        <div class="page">
+            <div class="row navi">
+                <div class="pos-f-t">
+                    <div class="collapse" id="navbarToggleExternalContent">
+                        <div class="bg-dark p-4">
+                            <div class="row">
+                                <div class="row control-text">
+                                    <h4 class="text-white">Water on/off</h4>
+                                    <span class="text-muted">Adjust water valve open threshold based on average sensor % humidity reading</span>
+                                </div>
+                                <div class="row control-slider">
+                                    <input
+                                        type="text"
+                                        name="somename"
+                                        data-provide="slider"
+                                        data-slider-orientation="horizontal"
+                                        data-slider-min="0"
+                                        data-slider-max="100"
+                                        data-slider-step="1"
+                                        data-slider-value="50"
+                                        data-slider-tooltip="always"
+                                        data-slider-tooltip_position="top"
+                                        data-slider-selection="after"
+                                        data-slider-handle="square"
+                                    >
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="row control-text">
+                                    <h4 class="text-white">Override</h4>
+                                    <span class="text-muted">Control water on/off manually</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <nav class="navbar navbar-dark bg-dark justify-content-between">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <span class="navbar-text mr-lg-5">
+                            Water <a href="#" class="badge badge-danger">OFF</a>
+                        </span>
+                    </nav>
+                </div>
+            </div>
+            <div class="row row-one align-items-start">
+                <div class="col-sm-12">
+                    <div class="chart-title text-center">Average moisture 12h (%)</div>
+                    <div id="12h_chart" class="google-chart"></div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="chart-title text-center">Water run time by day (hours)</div>
+                    <div id="run_chart" class="google-chart"></div>
+                </div>
+            </div>
+            <div class="row row-two">
+                <div class="container gauges">
+                    <div class="row">
+                        <div id="col-gauge-a1" class="gauge col-12 col-sm-4 col-md-3">
+                            <div class="gauge-label">A1</div>
+                            <div id="gauge-a1" class="google_chart"></div>
+                        </div>
+                        <div id="col-gauge-a2" class="gauge col-12 col-sm-4 col-md-3">
+                            <div class="gauge-label">A2</div>
+                            <div id="gauge-a2" class="google_chart"></div>
+                        </div>
+                        <div id="col-gauge-a3" class="gauge col-12 col-sm-4 col-md-3">
+                            <div class="gauge-label">A3</div>
+                            <div id="gauge-a3" class="google_chart"></div>
+                        </div>
+                        <div id="col-gauge-a4" class="gauge col-12 col-sm-4 col-md-3">
+                            <div class="gauge-label">A4</div>
+                            <div id="gauge-a4" class="google_chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+        
+
+        <!-- <dev class="sensors">
+            <div id="a1" class="sensor">a1<br></div>
+            <div id="a2" class="sensor">a2<br></div>
+            <div id="a3" class="sensor">a3<br></div>
+            <div id="a4" class="sensor">a4<br></div>
+        </dev> -->
+        <!-- <form id="form" id="chat_form">
+            <input id="chat_input" type="text">
+            <input type="submit" value="Send">
+        </form> -->
+
+        <script src="/jquery/dist/jquery.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="/bootstrap-slider/dist/bootstrap-slider.min.js"></script>
+    </body>
+</html> 
+
+<script>
+    google.charts.setOnLoadCallback(function () {
+        // connect to socket and draw the chart(s)
+        // io.connect().on('sensors', function (data) {
+            // update chart data
+            drawCharts(data);
+
+            // testing
+            // $('#a1').append(data.a1 + "<br/>");
+            // $('#a2').append(data.a2 + "<br/>");
+            // $('#a3').append(data.a3 + "<br/>");
+            // $('#a4').append(data.a4 + "<br/>");
+        // });
+    });
+
+    // re-draw charts on window resize event
+    $(document).ready(function () {
+        $(window).resize(function(){
+            drawCharts(data);
+        });
+    });
+</script>
