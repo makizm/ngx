@@ -5,6 +5,8 @@
         <script src="/jquery/dist/jquery.js"></script>
         <script src="/socket.io/socket.io.js"></script>
 
+        <link rel="icon" href="/favicon.ico">
+
         <!-- bootstrap -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -248,6 +250,10 @@
                 display: inline-grid;
                 margin-bottom: 10px;
             }
+            .row.navi div.row.nav-item {
+                margin: 0 0 20px 0;
+                display: block;
+            }
             .row.row-one > div > div.chart-title {
                 color: #7e7e7e;
                 margin-left: 10px;
@@ -299,12 +305,12 @@
                 <div class="pos-f-t">
                     <div class="collapse" id="navbarToggleExternalContent">
                         <div class="bg-dark p-4">
-                            <div class="row">
+                            <div class="row nav-item">
                                 <div class="row control-text">
                                     <h4 class="text-white">Water on/off</h4>
                                     <span class="text-muted">Adjust water valve open threshold based on average sensor % humidity reading</span>
                                 </div>
-                                <div class="row control-slider">
+                                <div class="row control-form">
                                     <input
                                         type="text"
                                         name="somename"
@@ -321,10 +327,20 @@
                                     >
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row nav-item">
                                 <div class="row control-text">
                                     <h4 class="text-white">Override</h4>
                                     <span class="text-muted">Control water on/off manually</span>
+                                </div>
+                                <div class="row control-form">
+                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                        <label id="button-on" class="btn btn-secondary">
+                                          <input id="valve-on" type="checkbox" autocomplete="off"> On
+                                        </label>
+                                        <label id="button-off" class="btn btn-danger active">
+                                          <input id="valve-off" type="checkbox" checked autocomplete="off"> Off
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -411,10 +427,44 @@
         // });
     });
 
+    function toggleValve(event) {
+        console.log(event);
+        // .removeClass('blue').addClass('green');
+        // firstElementChild
+        if(event.currentTarget.className.includes('active')) {
+            if(event.currentTarget.id.includes('button-on')) {
+                $('#button-on').removeClass('active');
+                $('#button-on').toggleClass('btn-success btn-secondary');
+                $('#button-off').toggleClass('btn-secondary btn-danger');
+            }
+
+            if(event.currentTarget.id.includes('button-off')) {
+                $('#button-off').removeClass('active');
+                $('#button-off').toggleClass('btn-danger btn-secondary');
+                $('#button-on').toggleClass('btn-secondary btn-success');
+            }
+        } else {
+            if(event.currentTarget.id.includes('button-on')) {
+                $('#button-on').removeClass('active');
+                $('#button-on').toggleClass('btn-secondary btn-success');
+                $('#button-off').toggleClass('btn-danger btn-secondary');
+            }
+
+            if(event.currentTarget.id.includes('button-off')) {
+                $('#button-off').removeClass('active');
+                $('#button-off').toggleClass('btn-secondary btn-danger');
+                $('#button-on').toggleClass('btn-success btn-secondary');
+            }
+        }
+    }
+
     // re-draw charts on window resize event
     $(document).ready(function () {
         $(window).resize(function(){
             drawCharts(data);
         });
+
+        $('#button-on').click(toggleValve);
+        $('#button-off').click(toggleValve);
     });
 </script>

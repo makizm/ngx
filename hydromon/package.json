@@ -4,10 +4,15 @@
   "description": "hydro-monitor for arduino via i2c interface",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "Max Leychenko",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:makizm/ngx.git"
+  },
   "dependencies": {
     "async": "^2.6.0",
     "bootstrap": "^4.1.1",
@@ -15,8 +20,8 @@
     "express": "^4.16.3",
     "font-awesome": "^4.7.0",
     "fs": "0.0.1-security",
-    "i2c-bus": "^3.2.0",
     "jquery": "^3.3.1",
+    "popper.js": "^1.14.3",
     "rxjs": "^6.1.0",
     "socket.io": "^2.1.0"
   }

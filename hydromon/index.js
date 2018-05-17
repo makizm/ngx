@@ -11,9 +11,8 @@ var async = require('async');
 
 const { Subject } = require('rxjs');
 
-var i2c = require('i2c-bus'),
-    i2c1;
-    // i2c1 = i2c.openSync(1);
+// var i2c = require('i2c-bus'),
+//     i2c1;
 
 var sensors = {
     a1: 0,
@@ -64,26 +63,26 @@ io.on('connection', function(socket) {
 
 function getValue(callback) {
 
-    async.series([
-        function (cb) {
-          i2c1 = i2c.open(1, cb);
-        },
-        function (cb) {
-            i2c1.readByte(I2C_ADDRESS, CMD_READ, function (err, rawValue) {
-                if (err) return cb(err);
-                return callback(rawValue);
-                cb(null);
-            });
-        },
-        function (cb) {
-            i2c1.close(cb);
-        }
-    ], function (err) {
-        // do error stuff
-        // console.log(err);
-        if(err) return false;
-    })
-
+    // async.series([
+    //     function (cb) {
+    //       i2c1 = i2c.open(1, cb);
+    //     },
+    //     function (cb) {
+    //         i2c1.readByte(I2C_ADDRESS, CMD_READ, function (err, rawValue) {
+    //             if (err) return cb(err);
+    //             return callback(rawValue);
+    //             cb(null);
+    //         });
+    //     },
+    //     function (cb) {
+    //         i2c1.close(cb);
+    //     }
+    // ], function (err) {
+    //     // do error stuff
+    //     // console.log(err);
+    //     if(err) return false;
+    // })
+    callback(0);
 }
 
 app.route('/api').get((req, res) => {
@@ -109,7 +108,7 @@ app.get('/', function(req, res,next) {
 });
 
 server.listen(3000, () => {
-    console.log('Server started!');
+    console.log('Server started on port 3000');
 });
 
 //(function () {
