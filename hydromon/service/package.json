@@ -1,0 +1,23 @@
+{
+  "name": "earthsensor-service",
+  "version": "1.0.0",
+  "description": "Raspberry Pi I2C API service for I2C interface to Arduino EarthSensor",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Max Leychenko",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.1",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "http": "0.0.0",
+    "i2c-bus": "^3.2.0",
+    "rpi-gpio": "^1.0.0",
+    "rxjs": "^6.2.0",
+    "socket.io": "^2.1.1",
+    "swagger-ui-express": "^3.0.9"
+  }
+}

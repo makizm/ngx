@@ -1,0 +1,19 @@
+<!doctype html>  
+<html lang="en">  
+    <head>
+        <!-- <script src="/jquery/dist/jquery.js"></script> -->
+        <script src="/socket.io/socket.io.js"></script>
+
+        <script type="text/javascript">
+            var socket = io.connect();
+
+            // socket.emit('join', 'Hello World from client');
+
+            socket.on('sensors', function(data) {
+                console.log(data);
+            });
+
+        </script>
+    </head>
+    <body>Welcome!</body>
+</html>
