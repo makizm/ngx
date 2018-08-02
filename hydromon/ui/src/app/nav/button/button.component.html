@@ -1,0 +1,28 @@
+<div class="nav-button">
+    <div class="row control-text">
+        <h4 class="text-white">Override</h4>
+        <span class="text-muted">Control water on/off manually</span>
+    </div>
+    <div class="row control-form">
+        <div *ngIf="valve.loading" class="btn-group" role="group">
+            <button type="button" class="btn">
+                <i class="fas fa-spinner fa-spin"></i>
+            </button>
+        </div>
+        <div *ngIf="!valve.loading" class="btn-group" role="group">
+            <div *ngIf="this.showPrompt; then confirm else actions"></div>
+            <ng-template #actions>
+                <button id="toggler" type="button" (click)="ButtonToggle()" class="btn" [ngClass]="valve.isOpened ? 'btn-danger' : 'btn-primary'">{{ valve.isOpened ? 'Close' : 'Open' }}</button>
+            </ng-template>
+            <ng-template #confirm>
+                <button type="button" (click)="Open(1)" class="btn btn-primary valve-run-value">1m</button>
+                <button type="button" (click)="Open(2)" class="btn btn-primary valve-run-value">2m</button>
+                <button type="button" (click)="Open(3)" class="btn btn-primary valve-run-value">3m</button>
+                <button type="button" (click)="Open(4)" class="btn btn-primary valve-run-value">4m</button>
+                <button type="button" (click)="Open(5)" class="btn btn-primary valve-run-value">5m</button>
+                <button type="button" (click)="Open(6)" class="btn btn-primary valve-run-value">6m</button>
+            </ng-template>
+        </div>
+    </div>
+    <div *ngIf="error" class="error-msg">{{ error }}</div>
+</div>

@@ -1,0 +1,9 @@
+.app {
+    color: #7e7e7e;
+}
+
+nav {
+    /* make menu overlay on top of content */
+    z-index:1;
+    position: relative;
+}

@@ -1,0 +1,27 @@
+div.nav {
+    height: 50px;
+    width: 100%;
+}
+div.nav .expanded {
+    width: 100%;
+}
+div.nav > div.navbar {
+    height: 45px;
+    width: 100%;
+    padding: 0 15px 0 15px; 
+}
+div.nav > div.navbar > button.navbar-toggler {
+    height: 35px;
+    width: 51px;
+    font-size: 1rem;
+}
+/* @media screen and (max-width: 600px) {} */
+.nav div.row.control-text {
+    display: inline-grid;
+    margin-bottom: 10px;
+}
+.nav div.row.nav-item {
+    margin: 0 0 20px 0;
+    display: block;
+    text-align: left;
+}
