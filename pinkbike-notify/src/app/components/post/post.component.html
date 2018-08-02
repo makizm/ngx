@@ -1,0 +1,19 @@
+<div class="list-group">
+        <div class="post container" *ngFor="let post of posts; index as i">
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                    <div class="col-4">
+                        <img [src]="post.imgUrl" class="img-thumbnail" style="width: 150px; height: 150px;">
+                    </div>
+                    <div class="col-8">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ post.title }}</h5>
+                            <small>{{ post.id }}</small>
+                        </div>
+                        <p class="mb-1">{{ post.description }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    
