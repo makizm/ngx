@@ -1,0 +1,12 @@
+<form [formGroup]="loginForm" (ngSubmit)="login()">
+    <label for="login">Login to Salesforce</label>
+    <div id="login" class="input-group">
+        <input formControlName="username" name="username" type="email" class="form-control" id="username" placeholder="Email"
+            [value]="'mleychenko@racktopsystems.com'">
+            
+        <div class="input-group-append">
+            <button [disabled]="!loginForm.valid" class="btn btn-primary" type="submit">Go</button>
+        </div>
+    </div>
+    <!-- <button [disabled]="!loginForm.valid" type="submit" class="btn btn-primary">Submit</button> -->
+</form>

@@ -1,0 +1,31 @@
+<div class="text">
+    <form [formGroup]="setupForm" (ngSubmit)="save()">
+
+        <label for="redirectUrl">Login redirect URL</label>
+        <div class="info-tooltip">Use this as a callback URL for the connected app definition.</div>
+        <div id="redirectUrl" class="input-group">
+            <input formControlName="redirectUrl" name="redirectUrl" type="text" class="form-control">
+        </div>
+
+        <label for="clientId">Client ID</label>
+        <div class="info-tooltip">The Consumer Key from the connected app definition</div>
+        <div id="clientId" class="input-group">
+            <input formControlName="clientId" name="clientId" type="text" class="form-control">
+        </div>
+
+        <label for="clientSecret">App Client Secret</label>
+        <div class="info-tooltip">The Consumer Secret from the connected app definition.</div>
+        <div id="clientSecret" class="input-group">
+            <input formControlName="clientSecret" name="clientSecret" type="text" class="form-control">
+        </div>
+
+        <label for="apiVers">API Version</label>
+        <div class="info-tooltip">Select default API version to use</div>
+        <div id="apiVers" class="input-group">
+            <input formControlName="apiVers" name="apiVers" type="text" class="form-control">
+        </div>
+
+        <br><br>
+        <button [disabled]="!setupForm.valid" type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>

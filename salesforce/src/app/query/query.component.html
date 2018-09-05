@@ -1,0 +1,49 @@
+<div class="title">
+    <h3>Execute Salesforce SOQL query</h3>
+</div>
+
+<form [formGroup]="queryForm" (ngSubmit)="Submit()">
+    <label class="query-url" for="query">{{ queryUrl + queryValue }}</label>
+    <div id="query" class="input-group">
+        <textarea class="form-control" formControlName="queryInput" aria-label="query text" placeholder="enter your query here..."></textarea>
+        <div class="input-group-append">
+            <button [disabled]="!queryForm.valid" class="btn btn-primary" type="submit">Run</button>
+        </div>
+    </div>
+
+    <label for="version">API Version</label>
+    <select formControlName="apiVersion" class="form-control" id="version">
+        <option *ngFor="let api of apiVersions; index as i" [ngValue]="api" [selected]="i == 0">{{ api.version }}</option>
+    </select>
+</form>
+
+<div [ngClass]="errorMsg ? 'show' : ''" class="alert alert-danger alert-dismissible fade" role="alert">
+    {{ errorMsg }}
+    <button type="button" (click)="DissmissAlert($event)" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="query-history">
+    <li *ngFor="let item of queryHistory; index as i">
+        {{ item.value }}
+        <span class="badge" [ngClass]="item.success ? 'badge-success' : 'badge-danger'">
+            {{ item.success ? 'Success' : 'Failed' }}
+        </span>
+        <span (click)="SetSearchValue(i)" class="badge badge-secondary">Run again</span>
+    </li>
+</div>
+
+<div class="response">
+    <h6>Response:</h6>
+    <pre>
+        <code [innerHTML]="response"></code>
+    </pre>
+</div>
+
+<div class="reference-url">
+    See Saleseforce reference page on search queries format 
+    <a href="https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm">
+        https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
+    </a>
+</div>

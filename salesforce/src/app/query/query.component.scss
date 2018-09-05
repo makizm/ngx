@@ -1,0 +1,56 @@
+.reference-url {
+    font-size: 0.5em;
+    color: #818182;
+
+    a {
+        color: #818182;
+    }
+}
+
+.query-url {
+    font-size: 0.8em;
+}
+
+.response {
+    color: #818182;
+    margin-bottom: 1rem;
+
+    .response-text {
+        font-family: monospace;
+        border: 1px solid #818182;
+        min-height: 40px;
+    }
+
+    pre {
+        font-family: monospace;
+        border: 1px solid #818182;
+        min-height: 40px;
+        font-size: 0.5em;
+
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+}
+
+.alert {
+    margin-bottom: 0px;
+}
+
+.alert.show {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.query-history {
+    margin-bottom: 1rem;
+
+    li {
+        font-size: 0.8em;
+    }
+
+    .badge {
+        margin-right: 0.1rem;
+        cursor: pointer;
+    }
+}
