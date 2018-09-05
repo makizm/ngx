@@ -2,6 +2,8 @@ var https = require('https');
 var htmlparser = require("htmlparser2");
 var select = require('soupselect').select;
 
+const debug = require('debug')('getpbdata');
+
 const NodeCache = require( "node-cache" );
 const myCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
 
@@ -31,6 +33,7 @@ function processArticle(article) {
     }
 
     if(tableCols.length > 0) {
+
         let descDom = tableCols[1];
 
         if(descDom) {
@@ -40,6 +43,12 @@ function processArticle(article) {
 
             let categoryDom = select(descDom, 'div br');
             category = categoryDom[0].next.data.trim() || null;
+
+            // description filed
+            let decsCol = select(descDom, 'table tr td');
+            debug(decsCol[4].children[0].data.trim() || null);
+
+            // throw new Error("You asked for it!")
         }
     }
 
@@ -144,7 +153,7 @@ let startRoutine = setInterval(() => {
             newArticles.forEach((article) => {
                 D.push(article)
                 // console.log("New item " + article.id + " " + article.postId + " " + article.title)
-                console.log(JSON.stringify(article));
+                // debug(article);
             })
         }
     });

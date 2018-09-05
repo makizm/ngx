@@ -1,0 +1,15 @@
+{
+    "name": "pinkbike",
+    "author": "Max Leychenko",
+    "version": "1.0.0",
+    "main": "./index.js",
+    "types": "./index.d.ts",
+    "dependencies": {
+        "htmlparser2": "^3.9.2",
+        "https": "1.0.0",
+        "request": "^2.87.0",
+        "rxjs": "^6.2.2",
+        "soupselect": "^0.2.0",
+        "typescript": "next"
+    }
+}

@@ -6,12 +6,15 @@ import { NgxElectronModule } from 'ngx-electron';
 
 import { AppComponent } from './app.component';
 
+import { PostComponent } from './components/post';
+
 import { ReversePipe } from './shared';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ReversePipe
+    ReversePipe,
+    PostComponent
   ],
   imports: [
     BrowserModule,

@@ -1,19 +1,19 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 
+const { PinkBike } = require('./pinkbike');
+
 // const RxIpc = require('rx-ipc-electron/lib/main')
 // const rxIpc = require('rx-ipc-electron/lib/rx-ipc');
 
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs')
 const { map, filter, switchMap } = require('rxjs/operators')
 
+// Electron.BrowserWindow
 let win;
 
-// let rxIpcTest = new rxIpc.RxIpc()
+let pinkbike = new PinkBike();
 
-function createObservable() {
-  return Observable.from(1,2,3,4,5,6,7,8,9,10)
-    .map(x => x * 2);
-}
+// let rxIpcTest = new rxIpc.RxIpc()
 
 ipcMain.on('asynchronous-message', (event, arg) => {
   console.log(arg) // prints "ping"
@@ -37,12 +37,21 @@ function createWindow () {
 
   win.loadURL(`file://${__dirname}/dist/index.html`)
 
+  pinkbike.post.subscribe(data => {
+    // send data to renderer
+    win.webContents.send('new-posts', data)
+  })
+  
+  pinkbike.start();
+
   //// uncomment below to open the DevTools.
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 
   // Event when the window is closed.
   win.on('closed', function () {
-    win = null
+    pinkbike.stop();
+
+    win = null;
   })
 }
 
